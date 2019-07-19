@@ -6,6 +6,10 @@ FactoryBot.define do
     description { 'Awesome task description' }
     done { false }
 
+    trait :invalid do
+      title { nil }
+    end
+
     association :task_list, factory: :task_list
   end
 end

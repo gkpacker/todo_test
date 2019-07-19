@@ -6,6 +6,7 @@ require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'devise'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -58,7 +59,23 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  # Include factory bot helpers
   config.include FactoryBot::Syntax::Methods
+
+  # Include controller helpers
+  config.include Devise::Test::ControllerHelpers, type: :controller
+
+  # Config database cleaner
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
+  end
 end
 
 Shoulda::Matchers.configure do |config|
@@ -67,3 +84,7 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+Dir[
+  File.expand_path(Rails.root.join('spec', 'support', '**', '**.rb')),
+].each { |file| require file }

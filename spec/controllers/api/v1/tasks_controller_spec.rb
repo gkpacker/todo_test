@@ -117,6 +117,26 @@ module Api
           }.to change(Task, :count).by(-1)
         end
       end
+
+      describe 'PUT #done' do
+        it "sets 'done' attribute to true" do
+          task.update_attributes(done: false)
+
+          expect {
+            put :done, params: { id: task.id }
+          }.to change { task.reload.done }.from(false).to(true)
+        end
+      end
+
+      describe 'PUT #pending' do
+        it "sets 'done' attribute to false" do
+          task.update_attributes(done: true)
+
+          expect {
+            put :pending, params: { id: task.id }
+          }.to change { task.reload.done }.from(true).to(false)
+        end
+      end
     end
   end
 end

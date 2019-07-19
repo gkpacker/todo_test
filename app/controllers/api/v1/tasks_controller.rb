@@ -4,7 +4,7 @@ module Api
   module V1
     class TasksController < ApiController
       before_action :set_task_list, only: %i[index create]
-      before_action :set_task, only: %i[show update destroy]
+      before_action :set_task, only: %i[show update destroy done pending]
 
       def index
         @tasks = @task_list.tasks

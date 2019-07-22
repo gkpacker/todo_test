@@ -14,12 +14,11 @@ module Api
       authenticate_or_request_with_http_basic do |email, password|
         user = User.find_by_email(email)
 
-        if user && user.valid_password?(password)
+        if user&.valid_password?(password)
           @current_user = user
         else
-          render json: {
-            error: 'Incorrect user or password.'
-          }, status: :unauthorized
+          render json: { error: 'Incorrect user or password.' },
+                 status: :unauthorized
         end
       end
     end

@@ -45,13 +45,13 @@ module Api
       end
 
       def done
-        change_task_status(true)
+        @task.done!
 
-        render json: @task
+        render json: @task.reload
       end
 
       def pending
-        change_task_status(false)
+        @task.pending!
 
         render json: @task.reload
       end
@@ -68,12 +68,6 @@ module Api
 
       def task_params
         params.require(:task).permit(:title, :description, :done, :subtask)
-      end
-
-      def change_task_status(status)
-        @task.done = status
-
-        @task.save
       end
     end
   end

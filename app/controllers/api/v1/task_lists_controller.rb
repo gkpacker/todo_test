@@ -3,7 +3,8 @@
 module Api
   module V1
     class TaskListsController < ApiController
-      before_action :set_task_list, only: %i[show update destroy]
+      before_action :set_task_list, only: %i[show update destroy favorite
+                                             unfavorite open close]
 
       def index
         @task_lists = TaskList.where(open: true)
@@ -41,6 +42,30 @@ module Api
         else
           render json: { errors: @task_list.errors }, status: :conflict
         end
+      end
+
+      def favorite
+        @task_list.favorite!
+
+        render json: @task_list.reload
+      end
+
+      def unfavorite
+        @task_list.unfavorite!
+
+        render json: @task_list.reload
+      end
+
+      def open
+        @task_list.open!
+
+        render json: @task_list.reload
+      end
+
+      def close
+        @task_list.close!
+
+        render json: @task_list.reload
       end
 
       private

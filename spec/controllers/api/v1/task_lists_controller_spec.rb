@@ -113,6 +113,46 @@ module Api
           }.to change(TaskList, :count).by(-1)
         end
       end
+
+      describe 'PUT #open' do
+        it 'sets the task list public' do
+          task_list.update_attributes(open: false)
+
+          expect {
+            put :open, params: { id: task_list.id }
+          }.to change { task_list.reload.open }.from(false).to(true)
+        end
+      end
+
+      describe 'PUT #close' do
+        it 'sets the task list private' do
+          task_list.update_attributes(open: true)
+
+          expect {
+            put :close, params: { id: task_list.id }
+          }.to change { task_list.reload.open }.from(true).to(false)
+        end
+      end
+
+      describe 'PUT #favorite' do
+        it 'favorites the task list' do
+          task_list.update_attributes(favorite: false)
+
+          expect {
+            put :favorite, params: { id: task_list.id }
+          }.to change { task_list.reload.favorite }.from(false).to(true)
+        end
+      end
+
+      describe 'PUT #unfavorite' do
+        it 'unfavorites the task list' do
+          task_list.update_attributes(favorite: true)
+
+          expect {
+            put :unfavorite, params: { id: task_list.id }
+          }.to change { task_list.reload.favorite }.from(true).to(false)
+        end
+      end
     end
   end
 end
